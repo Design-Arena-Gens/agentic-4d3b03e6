@@ -1,0 +1,135 @@
+:root {
+  --bg: #f6f5f3;
+  --ink: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.frame {
+  width: min(92vw, 540px);
+  aspect-ratio: 9 / 16;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 6px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.stage { width: 100%; height: 100%; display: block; }
+
+/* Master timeline duration for sync */
+:root { --t: 12s; }
+
+/* Mountains subtle parallax shimmer */
+.mountains { animation: mountainDrift var(--t) linear infinite; }
+@keyframes mountainDrift {
+  0%, 100% { transform: translateY(0px); opacity: 0.96; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Ripple animations at two beats: surfacing and splash */
+.ripples circle {
+  fill: none;
+  stroke: #7FC6EA;
+  stroke-width: 6;
+  opacity: 0;
+}
+.ripples .r1 { animation: ripple var(--t) ease-out infinite; }
+.ripples .r2 { animation: ripple var(--t) ease-out infinite; animation-delay: calc(var(--t) * 0.58); }
+.ripples .r3 { animation: ripple var(--t) ease-out infinite; animation-delay: calc(var(--t) * 0.60); }
+@keyframes ripple {
+  0% { r: 0; opacity: 0; }
+  6% { r: 20; opacity: 0.35; }
+  14% { r: 70; opacity: 0; }
+  58% { r: 0; opacity: 0; }
+  62% { r: 24; opacity: 0.4; }
+  74% { r: 90; opacity: 0; }
+  100% { r: 0; opacity: 0; }
+}
+
+/* Fish motion: rise, grabbed, fall, pop back */
+.fish {
+  transform-origin: center;
+  animation:
+    fishPath var(--t) cubic-bezier(.2,.9,.2,1) infinite,
+    fishWiggle calc(var(--t) * 0.25) ease-in-out infinite;
+}
+@keyframes fishWiggle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(0, 0) rotate(-4deg) scale(1.02); }
+  50% { transform: translate(0, 0) rotate(3deg) scale(0.99); }
+  75% { transform: translate(0, 0) rotate(-2deg) scale(1.01); }
+}
+@keyframes fishPath {
+  /* 0%: start at surface center */
+  0% { transform: translate(450px, 1085px); }
+  /* slowly rise from below to surface */
+  12% { transform: translate(450px, 1135px); }
+  20% { transform: translate(450px, 1085px); }
+  /* eagle grabs: fish moves with eagle upward */
+  35% { transform: translate(460px, 1020px); }
+  45% { transform: translate(520px, 900px) rotate(-8deg); }
+  /* struggle causes bend/stretch illusion via scale on wiggle anim */
+  55% { transform: translate(540px, 860px) rotate(6deg); }
+  /* fish breaks free and falls back toward lake */
+  65% { transform: translate(520px, 980px) rotate(-10deg); }
+  75% { transform: translate(470px, 1085px) rotate(-2deg); }
+  /* splash and brief dip under */
+  80% { transform: translate(450px, 1110px) rotate(0deg); }
+  88% { transform: translate(450px, 1085px); }
+  /* final beat: exactly same as 0% */
+  100% { transform: translate(450px, 1085px); }
+}
+
+/* Tail flaps a bit quicker for comedy */
+.tail {
+  transform-origin: 70px 0px;
+  animation: tailFlap 900ms ease-in-out infinite;
+}
+@keyframes tailFlap {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(-18deg) scaleX(0.95); }
+}
+
+/* Eagle motion: swoop, grab, lift, exit */
+.eagle {
+  transform-origin: center;
+  animation: eaglePath var(--t) cubic-bezier(.2,.9,.2,1) infinite;
+}
+.wing { transform-origin: center; animation: wingFlap 600ms ease-in-out infinite; }
+@keyframes wingFlap {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(-12deg); }
+}
+@keyframes eaglePath {
+  0% { transform: translate(450px, -320px) rotate(10deg) scale(1); opacity: 0; }
+  18% { transform: translate(420px, -40px) rotate(8deg) scale(1); opacity: 1; }
+  28% { transform: translate(460px, 860px) rotate(6deg) scale(1.02); }
+  36% { transform: translate(470px, 990px) rotate(2deg) scale(1.04); }
+  46% { transform: translate(520px, 840px) rotate(-6deg) scale(1.05); }
+  56% { transform: translate(560px, 760px) rotate(-10deg) scale(1.02); }
+  66% { transform: translate(700px, 400px) rotate(-16deg) scale(1); opacity: 1; }
+  76% { transform: translate(980px, -200px) rotate(-24deg) scale(1); opacity: 0.9; }
+  100% { transform: translate(1200px, -400px) rotate(-28deg) scale(1); opacity: 0; }
+}
+
+/* Water shimmer on the whole lake (slow) */
+rect[filter="url(#water)"] { animation: waterWave 5s ease-in-out infinite; transform-origin: 50% 50%; }
+@keyframes waterWave {
+  0%, 100% { transform: scaleY(1); opacity: 0.72; }
+  50% { transform: scaleY(1.015); opacity: 0.8; }
+}
